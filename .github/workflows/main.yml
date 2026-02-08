@@ -42,7 +42,7 @@ jobs:
 
       - name: Build
         run: |
-          xcodebuild build -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release MARKETING_VERSION=${{github.ref_name}} CODE_SIGN_IDENTITY="CI Code Signing"
+          xcodebuild build -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release MARKETING_VERSION=${{github.ref_name}} CODE_SIGN_IDENTITY="CI Code Signing" CODE_SIGN_STYLE=Manual
           cp -r "$(xcodebuild -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release -showBuildSettings | awk '/\bBUILT_PRODUCTS_DIR\b/ {print $3}')/TomatoBar.app" .
           zip -r "TomatoBar-${{env.version}}.zip" "TomatoBar.app"
 
