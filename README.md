@@ -1,53 +1,94 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/ivoronin/TomatoBar/main/TomatoBar/Assets.xcassets/AppIcon.appiconset/icon_128x128%402x.png" width="128" height="128"/>
-<p>
- 
-<h1 align="center">TomatoBar</h1>
-<p align="center">
-<img src="https://img.shields.io/github/actions/workflow/status/ivoronin/TomatoBar/main.yml?branch=main"/> <img src="https://img.shields.io/github/downloads/ivoronin/TomatoBar/total"/> <img src="https://img.shields.io/github/v/release/ivoronin/TomatoBar?display_name=tag"/> <img src="https://img.shields.io/homebrew/cask/v/tomatobar"/>
+  <img src="https://raw.githubusercontent.com/ivoronin/TomatoBar/main/TomatoBar/Assets.xcassets/AppIcon.appiconset/icon_128x128%402x.png" width="128" height="128" alt="TomatoBar icon"/>
 </p>
 
-<img
-  src="https://github.com/ivoronin/TomatoBar/raw/main/screenshot.png?raw=true"
-  alt="Screenshot"
-  width="50%"
-  align="right"
-/>
+<h1 align="center">TomatoBar (Fork)</h1>
+
+<p align="center">
+  A macOS menu bar Pomodoro timer fork with a brand-new timer page and statistics page.
+</p>
+
+<p align="center">
+  <a href="https://github.com/LittleSunflower333/TomatoBar/actions/workflows/main.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/LittleSunflower333/TomatoBar/main.yml?branch=main" alt="Build Status"/>
+  </a>
+  <a href="https://github.com/LittleSunflower333/TomatoBar/releases">
+    <img src="https://img.shields.io/github/v/release/LittleSunflower333/TomatoBar?display_name=tag" alt="Latest Release"/>
+  </a>
+  <a href="https://github.com/LittleSunflower333/TomatoBar/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/LittleSunflower333/TomatoBar" alt="License"/>
+  </a>
+</p>
+
+## Fork Notice
+
+This repository is a **fork** of [ivoronin/TomatoBar](https://github.com/ivoronin/TomatoBar).
+
+- Upstream project: [ivoronin/TomatoBar](https://github.com/ivoronin/TomatoBar)
+- This fork: [LittleSunflower333/TomatoBar](https://github.com/LittleSunflower333/TomatoBar)
 
 ## Overview
-Have you ever heard of Pomodoro? It’s a great technique to help you keep track of time and stay on task during your studies or work. Read more about it on <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique">Wikipedia</a>.
 
-TomatoBar is world's neatest Pomodoro timer for the macOS menu bar. All the essential features are here - configurable
-work and rest intervals, optional sounds, discreet actionable notifications, global hotkey.
+TomatoBar is a Pomodoro timer for the macOS menu bar with:
 
-TomatoBar is fully sandboxed with no entitlements.
+- Configurable work and rest intervals
+- Optional sounds
+- Actionable notifications
+- Global shortcut support
 
-Download the latest release <a href="https://github.com/ivoronin/TomatoBar/releases/latest/">here</a> or install using Homebrew:
-```
-$ brew install --cask tomatobar
-```
+The app is sandboxed and designed for lightweight daily use.
 
-If the app doesn't start, install using the `--no-quarantine` flag:
-```
-$ brew install --cask --no-quarantine tomatobar
-```
+## What's New In This Fork
 
-## About
-
-This project is based on ivoronin/TomatoBar.
-
-Additional features:
 - Added a brand-new timer page with a centered circular countdown progress ring and tomato-based in-session progress markers.
 - Added a brand-new statistics page with week/month views, heatmap and bar chart modes, hover-driven detail switching, and current day/period highlighting.
 
-## Integration with other tools
-### Event log
-TomatoBar logs state transitions in JSON format to `~/Library/Containers/com.github.ivoronin.TomatoBar/Data/Library/Caches/TomatoBar.log`. Use this data to analyze your productivity and enrich other data sources.
-### Starting and stopping the timer
-TomatoBar can be controlled using `tomatobar://` URLs. To start or stop the timer from the command line, use `open tomatobar://startStop`.
+## Install
 
-## Older versions
-Touch bar integration and older macOS versions (earlier than Big Sur) are supported by TomatoBar versions prior to 3.0
+Build from source in Xcode:
 
-## Licenses
- - Timer sounds are licensed from buddhabeats
+1. Clone this repository.
+2. Open `TomatoBar.xcodeproj`.
+3. Select your signing team if needed.
+4. Build and run.
+
+Upstream Homebrew install remains available for the original project:
+
+```bash
+brew install --cask tomatobar
+```
+
+If the app does not start, try:
+
+```bash
+brew install --cask --no-quarantine tomatobar
+```
+
+## Integration
+
+### Event Log
+
+TomatoBar logs state transitions in JSON format to:
+
+`~/Library/Containers/com.github.ivoronin.TomatoBar/Data/Library/Caches/TomatoBar.log`
+
+### URL Scheme
+
+Start/stop timer from terminal:
+
+```bash
+open tomatobar://startStop
+```
+
+## Credits
+
+- Original author and upstream maintainers: [ivoronin/TomatoBar](https://github.com/ivoronin/TomatoBar)
+- This fork keeps original attribution and builds on top of the upstream implementation.
+
+## License
+
+This fork is distributed under the [MIT License](LICENSE), consistent with the upstream project.
+
+Third-party assets:
+
+- Timer sounds are licensed from buddhabeats.
