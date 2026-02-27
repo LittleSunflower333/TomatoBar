@@ -32,6 +32,14 @@ If the app doesn't start, install using the `--no-quarantine` flag:
 $ brew install --cask --no-quarantine tomatobar
 ```
 
+## About
+
+This project is based on ivoronin/TomatoBar.
+
+Additional features:
+- xxx
+- xxx
+
 ## Integration with other tools
 ### Event log
 TomatoBar logs state transitions in JSON format to `~/Library/Containers/com.github.ivoronin.TomatoBar/Data/Library/Caches/TomatoBar.log`. Use this data to analyze your productivity and enrich other data sources.
