@@ -37,8 +37,8 @@ $ brew install --cask --no-quarantine tomatobar
 This project is based on ivoronin/TomatoBar.
 
 Additional features:
-- xxx
-- xxx
+- Added a brand-new timer page with a centered circular countdown progress ring and tomato-based in-session progress markers.
+- Added a brand-new statistics page with week/month views, heatmap and bar chart modes, hover-driven detail switching, and current day/period highlighting.
 
 ## Integration with other tools
 ### Event log
