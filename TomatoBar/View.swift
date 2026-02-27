@@ -126,7 +126,7 @@ private struct SoundsView: View {
 }
 
 private enum ChildView {
-    case intervals, settings, sounds
+    case timer, intervals, settings, sounds, stats
 }
 
 struct TBPopoverView: View {
@@ -162,12 +162,15 @@ struct TBPopoverView: View {
             .keyboardShortcut(.defaultAction)
 
             Picker("", selection: $activeChildView) {
+                Text(NSLocalizedString("TBPopoverView.timer.label", comment: "Timer label")).tag(ChildView.timer)
                 Text(NSLocalizedString("TBPopoverView.intervals.label",
                                        comment: "Intervals label")).tag(ChildView.intervals)
                 Text(NSLocalizedString("TBPopoverView.settings.label",
                                        comment: "Settings label")).tag(ChildView.settings)
                 Text(NSLocalizedString("TBPopoverView.sounds.label",
                                        comment: "Sounds label")).tag(ChildView.sounds)
+                Text(NSLocalizedString("TBPopoverView.stats.label",
+                                       comment: "Stats label")).tag(ChildView.stats)
             }
             .labelsHidden()
             .frame(maxWidth: .infinity)
@@ -175,12 +178,16 @@ struct TBPopoverView: View {
 
             GroupBox {
                 switch activeChildView {
+                case .timer:
+                    TimerView().environmentObject(timer)
                 case .intervals:
                     IntervalsView().environmentObject(timer)
                 case .settings:
                     SettingsView().environmentObject(timer)
                 case .sounds:
                     SoundsView().environmentObject(timer.player)
+                case .stats:
+                    StatsView()
                 }
             }
 
@@ -225,6 +232,7 @@ struct TBPopoverView: View {
             /* Use values from GeometryReader */
 //            .frame(width: 240, height: 276)
             .padding(12)
+            .frame(width: 260, height: 360)
     }
 }
 
@@ -234,3 +242,144 @@ struct TBPopoverView: View {
         return Color.clear
     }
 #endif
+
+// 计时器主视图结构体
+private struct TimerView: View {
+    @EnvironmentObject private var timer: TBTimer
+    private let accentGreen = Color(red: 0.36, green: 0.71, blue: 0.36)
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            Spacer(minLength: 4)
+            StatusIndicator(state: getCurrentState(), accentGreen: accentGreen)
+
+            ZStack {
+                CircularProgressRing(
+                    progress: progressValue,
+                    ringColor: getCurrentStateColor()
+                )
+                VStack(spacing: 4) {
+                    Text(timer.timeLeftString)
+                        .font(.system(size: 30, weight: .bold, design: .monospaced))
+                        .foregroundColor(.primary)
+                }
+            }
+            .frame(height: 128)
+
+            SetProgressDots(current: timer.consecutiveWorkIntervals,
+                            total: timer.workIntervalsInSet)
+            Spacer(minLength: 4)
+        }
+        .padding(.top, 6)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    // 获取当前状态
+    private func getCurrentState() -> TBStateMachineStates {
+        return timer.stateMachine.state
+    }
+    
+    // 根据当前状态获取颜色
+    private func getCurrentStateColor() -> Color {
+        switch getCurrentState() {
+        case .work:
+            return Color.red // 专注模式使用番茄红
+        case .rest:
+            return accentGreen // 休息模式使用图标绿色
+        case .idle:
+            return Color.gray // 空闲状态使用灰色
+        }
+    }
+
+    private var progressValue: Double {
+        guard timer.currentIntervalSeconds > 0 else { return 0 }
+        let elapsed = max(0, timer.currentIntervalSeconds - timer.timeLeftSeconds)
+        return min(1.0, Double(elapsed) / Double(timer.currentIntervalSeconds))
+    }
+
+    private func getStateSubtitle() -> String {
+        switch getCurrentState() {
+        case .work:
+            return "专注倒计时"
+        case .rest:
+            return "休息倒计时"
+        case .idle:
+            return "点击开始"
+        }
+    }
+    
+    // 状态指示器组件
+    private struct StatusIndicator: View {
+        let state: TBStateMachineStates
+        let accentGreen: Color
+        
+        var body: some View {
+            Text(getStateText())
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(getStateColor())
+        }
+        
+        private func getStateText() -> String {
+            switch state {
+            case .work:
+                return "专注中"
+            case .rest:
+                return "休息中"
+            case .idle:
+                return "准备开始"
+            }
+        }
+        
+        private func getStateColor() -> Color {
+            switch state {
+            case .work:
+                return Color.red
+            case .rest:
+                return accentGreen
+            case .idle:
+                return Color.gray
+            }
+        }
+    }
+    
+    // 圆环进度
+    private struct CircularProgressRing: View {
+        let progress: Double
+        let ringColor: Color
+
+        var body: some View {
+            ZStack {
+                Circle()
+                    .stroke(Color.primary.opacity(0.08), lineWidth: 12)
+                Circle()
+                    .trim(from: 0, to: progress)
+                    .stroke(ringColor, style: StrokeStyle(lineWidth: 12, lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+                    .animation(.easeInOut(duration: 0.2), value: progress)
+            }
+        }
+    }
+
+    // 组内进度点
+    private struct SetProgressDots: View {
+        let current: Int
+        let total: Int
+        
+        var body: some View {
+            HStack(spacing: 6) {
+                ForEach(0..<total, id: \.self) { index in
+                    if index < current {
+                        Image("Fanqie")
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 12, height: 12)
+                    } else {
+                        Circle()
+                            .fill(Color.gray.opacity(0.25))
+                            .frame(width: 8, height: 8)
+                    }
+                }
+            }
+        }
+    }
+}

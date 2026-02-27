@@ -14,9 +14,11 @@
 "SoundsView.isTickingEnabled.label" = "滴答声";
 "TBPopoverView.start.label" = "开始";
 "TBPopoverView.stop.label" = "停止";
+"TBPopoverView.timer.label" = "计时器";
 "TBPopoverView.intervals.label" = "时长";
 "TBPopoverView.settings.label" = "设置";
 "TBPopoverView.sounds.label" = "声音";
+"TBPopoverView.stats.label" = "统计";
 "TBPopoverView.about.label" = "关于";
 "TBPopoverView.quit.label" = "退出";
 "TBTimer.onRestStart.title" = "时间到";

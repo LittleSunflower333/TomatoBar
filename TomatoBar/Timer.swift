@@ -12,14 +12,17 @@ class TBTimer: ObservableObject {
     // This preference is "hidden"
     @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60.0
 
-    private var stateMachine = TBStateMachine(state: .idle)
+    public var stateMachine = TBStateMachine(state: .idle)
     public let player = TBPlayer()
-    private var consecutiveWorkIntervals: Int = 0
+    public var consecutiveWorkIntervals: Int = 0
     private var notificationCenter = TBNotificationCenter()
     private var finishTime: Date!
     private var timerFormatter = DateComponentsFormatter()
     @Published var timeLeftString: String = ""
+    @Published var timeLeftSeconds: Int = 0
+    @Published var currentIntervalSeconds: Int = 0
     @Published var timer: DispatchSourceTimer?
+    private let statsManager = TBStatsManager()
 
     init() {
         /*
@@ -120,6 +123,8 @@ class TBTimer: ObservableObject {
     }
 
     func updateTimeLeft() {
+        let remaining = max(0, Int(ceil(finishTime.timeIntervalSince(Date()))))
+        timeLeftSeconds = remaining
         timeLeftString = timerFormatter.string(from: Date(), to: finishTime)!
         if timer != nil, showTimerInMenuBar {
             TBStatusItem.shared.setTitle(title: timeLeftString)
@@ -130,6 +135,7 @@ class TBTimer: ObservableObject {
 
     private func startTimer(seconds: Int) {
         finishTime = Date().addingTimeInterval(TimeInterval(seconds))
+        currentIntervalSeconds = seconds
 
         let queue = DispatchQueue(label: "Timer")
         timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
@@ -137,6 +143,7 @@ class TBTimer: ObservableObject {
         timer!.setEventHandler(handler: onTimerTick)
         timer!.setCancelHandler(handler: onTimerCancel)
         timer!.resume()
+        updateTimeLeft()
     }
 
     private func stopTimer() {
@@ -185,6 +192,8 @@ class TBTimer: ObservableObject {
     private func onWorkFinish(context _: TBStateMachine.Context) {
         consecutiveWorkIntervals += 1
         player.playDing()
+        // 记录番茄钟完成
+        statsManager.addTomatoRecord(duration: workIntervalLength * 60)
     }
 
     private func onWorkEnd(context _: TBStateMachine.Context) {
@@ -225,5 +234,7 @@ class TBTimer: ObservableObject {
         stopTimer()
         TBStatusItem.shared.setIcon(name: .idle)
         consecutiveWorkIntervals = 0
+        timeLeftSeconds = 0
+        currentIntervalSeconds = 0
     }
 }
